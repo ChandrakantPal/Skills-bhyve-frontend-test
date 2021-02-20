@@ -27,7 +27,7 @@ export default function Login() {
       localStorage.setItem('token', responseObject.data.accessToken)
       dispatch('LOGIN', responseObject.data.user)
       if (!responseObject.data.user.profileCompleted) {
-        history.push('/userdetails')
+        history.replace('/userdetails')
       } else {
         history.push('/')
       }
@@ -51,7 +51,7 @@ export default function Login() {
           backgroundImage: `url('https://cdn.dribbble.com/users/3281732/screenshots/14636958/media/79a0f9b5ed90fc2634c9b85a6b52b234.jpg?compress=1&resize=800x600')`,
         }}
       ></div>
-      <div className="flex flex-col justify-center pl-6">
+      <div className="flex flex-col justify-center p-4 md:pl-6">
         <div className="w-70">
           <h1 className="mb-2 text-lg font-medium">Login</h1>
           <p className="mb-10 text-xs">
