@@ -7,7 +7,7 @@ export interface User {
   password?: string
   salt: string
   profileCompleted: boolean
-  skills?: Skill[] | any
+  skills?: string[] | any
 }
 
 export interface Skill {
