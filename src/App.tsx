@@ -1,26 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import axios from 'axios'
+import { Route, Switch } from 'react-router-dom'
+import Home from './components/Home'
+import Login from './components/Login'
+import Navbar from './components/Navbar'
+import SignUp from './components/Register'
+import UserDetails from './components/UserDetails'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+axios.defaults.baseURL = 'https://be.bhyve-app.com:3020'
+
+const token = localStorage.getItem('token')
+
+if (token) {
+  axios.defaults.headers.AUTHORIZATION = `Bearer ${token}`
 }
 
-export default App;
+const App: React.FC = () => {
+  return (
+    <div className="w-screen h-screen bg-gray-700">
+      <Navbar />
+      <Switch>
+        <Route path="/login" exact component={Login} />
+        <Route path="/signup" exact component={SignUp} />
+        <Route path="/userdetails" exact component={UserDetails} />
+        <Route path="/" exact component={Home} />
+      </Switch>
+    </div>
+  )
+}
+
+export default App
