@@ -16,7 +16,7 @@ if (token) {
 
 const App: React.FC = () => {
   return (
-    <div className="w-screen h-screen bg-gray-700">
+    <div className="w-screen h-full bg-gray-700">
       <Navbar />
       <Switch>
         <Route path="/login" exact component={Login} />
