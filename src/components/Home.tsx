@@ -13,8 +13,13 @@ export default function Home() {
 
   useEffect(() => {
     const fetchUserData = async () => {
+      const token = localStorage.getItem('token')
       try {
-        const { data } = await axios.get<User>('/user/profile')
+        const { data } = await axios.get<User>('/user/profile', {
+          headers: {
+            AUTHORIZATION: `Bearer ${token}`,
+          },
+        })
         setUser(data)
       } catch (err) {
         console.log(err)
