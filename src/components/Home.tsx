@@ -38,7 +38,7 @@ export default function Home() {
     <>
       <div className="container flex h-screen pt-16">
         <div className="w-auto px-4 mx-auto mt-16 mb-auto md:p-0">
-          <div className="py-4 text-blue-300 border border-blue-300 rounded">
+          <div className="w-2/3 py-4 mx-auto text-blue-300 border border-blue-300 rounded">
             <div className="flex justify-center">
               <div className="w-24 h-24 border border-blue-300 rounded-full">
                 <h1 className="my-5 text-5xl text-center">🧑‍🚀</h1>
@@ -56,15 +56,15 @@ export default function Home() {
               <h1 className="text-2xl text-blue-500">
                 last name : <em className="text-blue-300"> {user?.lastName}</em>
               </h1>
-              <h1 className="text-2xl text-blue-500">
-                Skills :{' '}
+              <div className="flex flex-wrap">
+                <p className="text-2xl text-blue-500">Skills :</p>
                 {user?.skills &&
                   user?.skills.map((skill: string, i: number) => (
-                    <em key={i} className="mr-4 text-blue-300">
-                      {skill}
-                    </em>
+                    <p className="mr-1 text-2xl text-blue-300" key={i}>
+                      <em>{skill},</em>
+                    </p>
                   ))}
-              </h1>
+              </div>
             </div>
           </div>
           <div className="flex justify-center mt-4">
