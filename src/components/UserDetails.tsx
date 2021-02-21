@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { FormEvent, useEffect, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
-import { useAuthState } from '../context/auth'
+import { useAuthDispatch, useAuthState } from '../context/auth'
 import { Skill, User } from '../types'
 import classNames from 'classnames'
 import InputGroup from './InputGroup'
@@ -48,8 +48,11 @@ export default function UserDetails() {
   const [start, setStart] = useState(0)
   const [end, setEnd] = useState(10)
   const [currentIndex, setCurrentIndex] = useState(1)
+  const [userError, setUserError] = useState('')
+  const [skillError, setSkillError] = useState('')
 
-  const { authenticated, user } = useAuthState()
+  const dispatch = useAuthDispatch()
+  const { authenticated } = useAuthState()
 
   const history = useHistory()
 
@@ -96,32 +99,39 @@ export default function UserDetails() {
 
   const addUserDetails = async (event: FormEvent) => {
     event.preventDefault()
-    const token = localStorage.getItem('token')
-    try {
-      const responseObject = await axios.post(
-        '/user/basic/profile',
-        {
-          firstName,
-          lastName,
-        },
-        {
-          headers: {
-            AUTHORIZATION: `Bearer ${token}`,
+    if (firstName.trim() === '' || lastName.trim() === '') {
+      setUserError('Fields Must not be empty')
+    } else {
+      const token = localStorage.getItem('token')
+      try {
+        setUserError('')
+        const responseObject = await axios.post(
+          '/user/basic/profile',
+          {
+            firstName,
+            lastName,
           },
-        }
-      )
-      console.log(responseObject)
-
-      setFirstName('')
-      setLastName('')
-    } catch (err) {
-      console.log(err)
+          {
+            headers: {
+              AUTHORIZATION: `Bearer ${token}`,
+            },
+          }
+        )
+        // console.log(responseObject)
+        dispatch('UPDATE_USER', responseObject.data)
+        setFirstName('')
+        setLastName('')
+      } catch (err) {
+        // console.log(err)
+        setSkillError('Something went wrong')
+      }
     }
   }
 
   const addUserSkills = async () => {
     const token = localStorage.getItem('token')
     try {
+      setSkillError('')
       const responseObject = await axios.post(
         '/user/skills',
         {
@@ -133,9 +143,11 @@ export default function UserDetails() {
           },
         }
       )
-      console.log(responseObject)
+      // console.log(responseObject)
+      dispatch('UPDATE_USER', responseObject.data)
     } catch (err) {
-      console.log(err)
+      // console.log(err)
+      setSkillError(err.response.data.message)
     }
   }
 
@@ -166,6 +178,13 @@ export default function UserDetails() {
                   setValue={setLastName}
                   className="mb-4"
                 />
+                <div className="my-2 text-center">
+                  {userError && (
+                    <small className="font-medium text-red-600">
+                      {userError}
+                    </small>
+                  )}
+                </div>
                 <button
                   type="submit"
                   className="w-full py-2 mb-4 text-xs font-bold text-white uppercase bg-blue-400 border border-gray-300 rounded"
@@ -198,6 +217,13 @@ export default function UserDetails() {
                   click={paginationClickHandler}
                   currentIndex={currentIndex}
                 />
+                <div className="my-2 text-center">
+                  {skillError && (
+                    <small className="font-medium text-red-600">
+                      {skillError}
+                    </small>
+                  )}
+                </div>
                 <div className="flex justify-evenly">
                   <button
                     className="w-32 py-2 mr-6 text-xs font-bold text-white uppercase bg-blue-400 border border-gray-300 rounded"
