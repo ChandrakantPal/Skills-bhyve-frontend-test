@@ -12,10 +12,12 @@ export default function Home() {
   const history = useHistory()
 
   useEffect(() => {
+    const source = axios.CancelToken.source()
     const fetchUserData = async () => {
       const token = localStorage.getItem('token')
       try {
         const { data } = await axios.get<User>('/user/profile', {
+          cancelToken: source.token,
           headers: {
             AUTHORIZATION: `Bearer ${token}`,
           },
@@ -26,6 +28,9 @@ export default function Home() {
       }
     }
     fetchUserData()
+    return () => {
+      source.cancel()
+    }
   }, [])
 
   if (!authenticated) history.push('/login')
