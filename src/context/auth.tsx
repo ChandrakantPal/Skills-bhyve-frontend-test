@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer } from 'react'
+import { createContext, useContext, useEffect, useReducer } from 'react'
 import { User } from '../types'
 
 interface State {
@@ -39,6 +39,16 @@ const reducer = (state: State, { type, payload }: Action) => {
         ...state,
         loading: false,
       }
+    case 'AUTH_CHECK':
+      return {
+        ...state,
+        authenticated: true,
+      }
+    case 'UPDATE_USER':
+      return {
+        ...state,
+        user: payload,
+      }
     default:
       throw new Error(`Unknow action type: ${type}`)
   }
@@ -50,6 +60,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     authenticated: false,
     loading: true,
   })
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      dispatch('AUTH_CHECK')
+    }
+  }, [])
 
   const dispatch = (type: string, payload?: any) =>
     defaultDispatch({ type, payload })
